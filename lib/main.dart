@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
-
 import 'sqliteservice.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Memory map',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -28,7 +27,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Memory map'),
     );
   }
 }
@@ -59,6 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
     areaLimit: const BoundingBox.world(),
   );
 
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -66,6 +67,16 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
 
         title: Text(widget.title),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.add_alert),
+              tooltip: 'Show Snackbar',
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('This is a snackbar')));
+              },
+            ),
+          ],
       ),
       body: Stack(
         children: <Widget>[
@@ -98,8 +109,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 )
             ),
-          )
+          ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          // Add your onPressed code here!
+          await mapController.goToLocation(GeoPoint(latitude: 47.35387, longitude: 8.43609));
+        },
+        backgroundColor: Colors.green,
+        child: const Icon(Icons.navigation),
       ),
     );
   }

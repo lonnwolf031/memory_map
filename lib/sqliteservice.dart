@@ -9,7 +9,7 @@ import 'package:sqflite/sqflite.dart';
 import 'data.dart';
 
 class SqliteService{
-  static const String databaseName = "database.db";
+  static const String databaseName = "memory_map.db";
   static Database? db;
 
   static Future<Database> initializeDb() async{
