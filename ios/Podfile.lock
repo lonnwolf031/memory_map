@@ -9,6 +9,8 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
+  - location (0.0.1):
+    - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -25,6 +27,7 @@ PODS:
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_osm_plugin (from `.symlinks/plugins/flutter_osm_plugin/ios`)
+  - location (from `.symlinks/plugins/location/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
@@ -42,6 +45,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_osm_plugin:
     :path: ".symlinks/plugins/flutter_osm_plugin/ios"
+  location:
+    :path: ".symlinks/plugins/location/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/ios"
   permission_handler_apple:
@@ -56,6 +61,7 @@ SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_osm_plugin: 029b14f54485ced3190bb2c4444616b76e10c6a8
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
   path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
   Polyline: 2a1f29f87f8d9b7de868940f4f76deb8c678a5b1
@@ -63,6 +69,6 @@ SPEC CHECKSUMS:
   Tangram-es: 628b634f7fc09d2217469b9914de00d9de49ff9d
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
 
-PODFILE CHECKSUM: e60af1236421644e3cb190e4ff613a3e799b68d9
+PODFILE CHECKSUM: 83587ec8689f3f4b489ed44ce8ceef2bcd52f564
 
 COCOAPODS: 1.12.0
