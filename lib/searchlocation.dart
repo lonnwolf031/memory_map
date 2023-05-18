@@ -67,7 +67,7 @@ class _SelectLocationState extends State<SelectLocationScreen> {
                   await returnPoint(_suggestions[index]);
                 },
                   leading: const Icon(Icons.location_pin),
-                  title: Text('Item ${_suggestions[index].address!.street.toString()}'),
+                  title: Text(_suggestions[index].address!.street.toString() ?? ''),
                   subtitle: Text('${_suggestions[index].address}'),
                 );
               },

@@ -172,15 +172,22 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> {
           return SimpleDialog(
             title: const Text("Save new location?"),
             children: <Widget>[
-              Text(point.latitude.toString()),
-              ElevatedButton(
-                  child: const Text('Search'),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: Text(point.latitude.toString()),
+              ),
+
+              Padding (
+                padding: const EdgeInsets.all(15),
+                child: ElevatedButton(
+                  child: const Text('Save'),
                   onPressed: () {
                     setState(() {
 
                     });
                     _createNewItem(context, point);
                   },
+                ),
               ),
             ],
           );
@@ -193,7 +200,7 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog( // <-- SEE HERE
-          title: const Text('Cancel booking'),
+          title: const Text('Cancel'),
           content: SingleChildScrollView(
             child: ListBody(
               children: const <Widget>[
