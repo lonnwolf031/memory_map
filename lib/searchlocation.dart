@@ -15,7 +15,15 @@ class _SelectLocationState extends State<SelectLocationScreen> {
 
   final TextEditingController _searchController = TextEditingController();
 
+  var _suggestions = <SearchInfo>[];
+  var _foo = ["hoi", " yay", "bar"];
+
   Future<void> findLocation(String query) async {
+      List<SearchInfo> suggestions = await addressSuggestion(query);
+      _suggestions = suggestions;
+  }
+
+  returnPoint(SearchInfo info) {
 
   }
 
@@ -25,7 +33,7 @@ class _SelectLocationState extends State<SelectLocationScreen> {
       appBar: AppBar(
         title: const Text('Select a location'),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -35,17 +43,36 @@ class _SelectLocationState extends State<SelectLocationScreen> {
                 controller: _searchController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'User Name',
-                  hintText: 'Enter Your Name',
+                  labelText: 'Search address',
+                  hintText: 'Enter address',
                 ),
               ),
             ),
             ElevatedButton(
-              child: Text('Sign In'),
-              onPressed: (){
-                findLocation(_searchController.text);
+              child: const Text('Search'),
+              onPressed: () {
+                setState(() {
+                  findLocation(_searchController.text);
+                });
               },
-            )
+            ),
+            ListView.separated(
+              padding: const EdgeInsets.all(8),
+              shrinkWrap: true,
+              itemCount: _suggestions.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                 // onTap: returnPoint(_suggestions[index]),
+                  leading: CircleAvatar(
+                    backgroundColor: const Color(0xff764abc),
+                    child: Text("address"),
+                  ),
+                  title: Text('Item ${_foo[index]}'),
+                  subtitle: Text('${_suggestions[index].address}'),
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) => const Divider(),
+            ),
           ],
         ),
       ),
