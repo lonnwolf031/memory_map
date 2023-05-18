@@ -32,7 +32,7 @@ class SqliteService{
       """);
   }
 
-  static Future<int> createItem(Note note) async {
+  static Future<int> createItem(Location note) async {
     final db = await SqliteService.initializeDb();
 
     final id = await db.insert('Notes', note.toMap(),
@@ -40,14 +40,14 @@ class SqliteService{
     return id;
   }
 
-  Future<List<Note>> getItems() async {
+  Future<List<Location>> getItems() async {
     final db = await SqliteService.initializeDb();
     final List<Map<String, Object?>> queryResult =
     await db.query('Notes');
-    return queryResult.map((e) => Note.fromMap(e)).toList();
+    return queryResult.map((e) => Location.fromMap(e)).toList();
   }
 
-  Future<int> updateNote(int id, Note item) async{ // returns the number of rows updated
+  Future<int> updateNote(int id, Location item) async{ // returns the number of rows updated
 
     final db = await initializeDb();
 

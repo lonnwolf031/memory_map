@@ -16,15 +16,16 @@ class _SelectLocationState extends State<SelectLocationScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   var _suggestions = <SearchInfo>[];
-  var _foo = ["hoi", " yay", "bar"];
 
   Future<void> findLocation(String query) async {
       List<SearchInfo> suggestions = await addressSuggestion(query);
       _suggestions = suggestions;
   }
 
-  returnPoint(SearchInfo info) {
-
+  Future<void> returnPoint(SearchInfo info) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.pop(context, info);
+    });
   }
 
   @override
@@ -62,12 +63,11 @@ class _SelectLocationState extends State<SelectLocationScreen> {
               itemCount: _suggestions.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
-                 // onTap: returnPoint(_suggestions[index]),
-                  leading: CircleAvatar(
-                    backgroundColor: const Color(0xff764abc),
-                    child: Text("address"),
-                  ),
-                  title: Text('Item ${_foo[index]}'),
+                onTap: () async {
+                  await returnPoint(_suggestions[index]);
+                },
+                  leading: const Icon(Icons.location_pin),
+                  title: Text('Item ${_suggestions[index].address!.street.toString()}'),
                   subtitle: Text('${_suggestions[index].address}'),
                 );
               },

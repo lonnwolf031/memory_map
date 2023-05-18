@@ -1,4 +1,4 @@
-class NoteColumn {
+class LocationColumn {
   static final List<String> values = [
     /// Add all fields
     id, title, description
@@ -9,26 +9,26 @@ class NoteColumn {
   static const String description ='description';
 }
 
-class Note{
+class Location{
   late String id;
   late String title;
   late String description;
 
-  Note({
+  Location({
     required this.id,
     required this.title,
     required this.description });
 
-  Note.fromMap(Map<String, dynamic> item):
-        id=item[NoteColumn.id],
-        title = item[NoteColumn.title],
-        description = item[NoteColumn.description];
+  Location.fromMap(Map<String, dynamic> item):
+        id=item[LocationColumn.id],
+        title = item[LocationColumn.title],
+        description = item[LocationColumn.description];
 
   Map<String, Object> toMap(){
     return {
-      NoteColumn.id:id,
-      NoteColumn.title: title,
-      NoteColumn.description: description,
+      LocationColumn.id:id,
+      LocationColumn.title: title,
+      LocationColumn.description: description,
     };
   }
 }

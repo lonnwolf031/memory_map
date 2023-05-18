@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:memory_map/createItemScreen.dart';
 import 'package:memory_map/searchlocation.dart';
-import 'package:memory_map/strings.dart';
+import 'package:memory_map/utilities.dart';
 import 'sqliteservice.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -21,7 +22,7 @@ class MemoryMapApp extends StatelessWidget {
     return MaterialApp(
       title: 'Memory map',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
       home: const MemoryMapHomePage(title: 'Memory map'),
     );
@@ -43,7 +44,7 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> {
 
   MapController mapController = MapController(
     initMapWithUserPosition: false,
-    initPosition: GeoPoint(latitude: 14.599512, longitude: 120.984222),
+    initPosition: GeoPoint(latitude:  4.9041, longitude: 52.3676),
     areaLimit: const BoundingBox.world(),
   );
 
@@ -52,7 +53,7 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> {
       case MenuItem.settings:
         break;
       case MenuItem.info:
-        _showBasicDialog("Information", "${Strings.appInfo}\n${Strings.copyrightInfo}");
+        _showBasicDialog("Information", "${Utilities.appInfo}\n${Utilities.copyrightInfo}");
         break;
     }
   }
@@ -79,21 +80,36 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> {
                 });
                 menuAction();
                 if(selectedMenu == MenuItem.selectLocation) {
-                  _navigateAndDisplaySelection(context);
+                  _handleLocationSelection(context);
                 }
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
-                const PopupMenuItem<MenuItem>(
+                PopupMenuItem<MenuItem>(
                   value: MenuItem.selectLocation,
-                  child: Text('Select location'),
+                  child: Row(
+                    children: const <Widget>[
+                      Icon(Icons.search, color: Colors.black),
+                      Text(' Find location'),
+                    ],
+                  ),
                 ),
-                const PopupMenuItem<MenuItem>(
+                PopupMenuItem<MenuItem>(
                   value: MenuItem.settings,
-                  child: Text('Settings'),
+                  child:  Row(
+                    children: const <Widget>[
+                      Icon(Icons.settings, color: Colors.black),
+                      Text(' Settings'),
+                    ],
+                  ),
                 ),
-                const PopupMenuItem<MenuItem>(
+                PopupMenuItem<MenuItem>(
                   value: MenuItem.info,
-                  child: Text('Information'),
+                  child: Row(
+                      children: const <Widget>[
+                      Icon(Icons.info, color: Colors.black),
+                      Text(' Info'),
+                    ],
+            ),
                 ),
               ],
             ),
@@ -104,13 +120,14 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> {
           OSMFlutter(
             controller: mapController,
             trackMyPosition: true,
+            onGeoPointClicked: (p) =>  _handleMarkerClicked(p),
             initZoom: 15,
             stepZoom: 1.0,
             userLocationMarker: UserLocationMaker(
               personMarker: const MarkerIcon(
                 icon: Icon(
                   Icons.location_history_rounded,
-                  color: Colors.red,
+                  color: Colors.black,
                   size: 48,
                 ),
               ),
@@ -136,13 +153,38 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           // Add your onPressed code here!
-          await mapController.goToLocation(GeoPoint(latitude: 47.35387, longitude: 8.43609));
+          GeoPoint geoPoint = await mapController.myLocation();
+          await mapController.goToLocation(geoPoint);
           //await mapController.currentLocation();
         },
         backgroundColor: Colors.green,
-        child: const Icon(Icons.navigation),
+        child: const Icon(Icons.location_searching),
       ),
     );
+  }
+
+  Future<void> _handleMarkerClicked(GeoPoint point) async {
+    // Declaring and Initializing OverlayState
+    // and OverlayEntry objects
+    await showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text("Save new location?"),
+            children: <Widget>[
+              Text(point.latitude.toString()),
+              ElevatedButton(
+                  child: const Text('Search'),
+                  onPressed: () {
+                    setState(() {
+
+                    });
+                    _createNewItem(context, point);
+                  },
+              ),
+            ],
+          );
+        });
   }
 
   Future<void> _showAlertDialog() async {
@@ -155,7 +197,7 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> {
           content: SingleChildScrollView(
             child: ListBody(
               children: const <Widget>[
-                Text('Are you sure want to cancel booking?'),
+                Text('Are you sure want to cancel?'),
               ],
             ),
           ),
@@ -178,19 +220,24 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> {
     );
   }
 
-  Future<void> _navigateAndDisplaySelection(BuildContext context) async {
-    // Navigator.push returns a Future that completes after calling
-    // Navigator.pop on the Selection Screen.
+  Future<void> _createNewItem(BuildContext context, GeoPoint point) async {
     final result = await Navigator.push(
       context,
-      // Create the SelectionScreen in the next step.
-      MaterialPageRoute(builder: (context) => SelectLocationScreen(controller: mapController)),
+      MaterialPageRoute(builder: (context) => CreateItemScreen(location: point)),
     );
   }
 
-  Future<void> _showLocationPicker() async {
-    List<SearchInfo> suggestions = await addressSuggestion("address");
+  Future<void> _handleLocationSelection(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SelectLocationScreen(controller: mapController)),
+    );
 
+    var location = Utilities.castOrNull<SearchInfo>(result);
+    if(location != null) {
+      // do something
+      await mapController.changeLocation(location.point!);
+    }
   }
 
   Future<void> _showBasicDialog(String title, String text) async {
@@ -204,37 +251,7 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> {
             ],
           );
         });
-
   }
 
-  Future<void> _showSimpleDialog() async {
-    await showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return SimpleDialog( // <-- SEE HERE
-            title: const Text('Select Booking Type'),
-            children: <Widget>[
-              SimpleDialogOption(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('General'),
-              ),
-              SimpleDialogOption(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Silver'),
-              ),
-              SimpleDialogOption(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Gold'),
-              ),
-            ],
-          );
-        });
-  }
 }
 
