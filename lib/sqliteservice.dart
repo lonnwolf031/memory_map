@@ -26,7 +26,7 @@ class SqliteService{
 
   static Future<void> createTables(Database database) async{
     await database.execute("""CREATE TABLE IF NOT EXISTS $locationTableName (
-        Location_Id INTEGER PRIMARY KEY,
+        Id INTEGER PRIMARY KEY,
         Lat TEXT NOT NULL,
         Lon TEXT NOT NULL,
         Title TEXT NOT NULL,
@@ -45,9 +45,26 @@ class SqliteService{
 
   static Future<List<Location>> getItems() async {
     final db = await SqliteService.initializeDb();
-    final List<Map<String, Object?>> queryResult =
-    await db.query(locationTableName);
+    //final List<Map<String, Object?>> queryResult =
+    //await db.query(locationTableName);
+    /*
     return queryResult.map((e) => Location.fromMap(e)).toList();
+
+    // Query the table for all The Dogs.
+
+     */
+    final List<Map<String, dynamic>> maps = await db.query(locationTableName);
+
+    // Convert the List<Map<String, dynamic> into a List<Dog>.
+    return List.generate(maps.length, (i) {
+      return Location.fromDB(
+        id: maps[i][LocationColumn.id],
+        lat: maps[i][LocationColumn.lat],
+        lon: maps[i][LocationColumn.lon],
+        title: maps[i][LocationColumn.title],
+        description: maps[i][LocationColumn.description]
+      );
+    });
   }
 
   static Future<int> updateLocation(int id, Location item) async{ // returns the number of rows updated

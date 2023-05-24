@@ -12,13 +12,20 @@ class LocationColumn {
 }
 
 class Location{
-  late String id;
+  late int? id;
   late String lat;
   late String lon;
   late String title;
   late String description;
 
   Location({
+    required this.lat,
+    required this.lon,
+    required this.title,
+    required this.description });
+
+  Location.fromDB({
+    required this.id,
     required this.lat,
     required this.lon,
     required this.title,
@@ -32,18 +39,8 @@ class Location{
         description = item[LocationColumn.description];
 
   Map<String, Object> toMap(){
-    var map = <String, Object>{
-      LocationColumn.lat:lat,
-      LocationColumn.lon:lon,
-      LocationColumn.title: title,
-    };
-    if (id != null) {
-      map[LocationColumn.id] = id;
-    }
-    return map;
-
     return {
-      LocationColumn.id:id,
+      //LocationColumn.id:id,
       LocationColumn.lat:lat,
       LocationColumn.lon:lon,
       LocationColumn.title: title,
