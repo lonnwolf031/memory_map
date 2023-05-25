@@ -64,6 +64,14 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> {
     super.dispose();
   }
 
+  void getItems() async {
+    var outRes = await SqliteService.getItems();
+    for (var item in outRes) {
+      print(item.id);
+      print(item.title);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -82,30 +90,34 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> {
                 if(selectedMenu == MenuItem.selectLocation) {
                   _handleLocationSelection(context);
                 }
+                else if(selectedMenu == MenuItem.settings) {
+                  getItems();
+
+                }
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
-                PopupMenuItem<MenuItem>(
+                const PopupMenuItem<MenuItem>(
                   value: MenuItem.selectLocation,
                   child: Row(
-                    children: const <Widget>[
+                    children: <Widget>[
                       Icon(Icons.search, color: Colors.black),
                       Text(' Find location'),
                     ],
                   ),
                 ),
-                PopupMenuItem<MenuItem>(
+                const PopupMenuItem<MenuItem>(
                   value: MenuItem.settings,
                   child:  Row(
-                    children: const <Widget>[
+                    children: <Widget>[
                       Icon(Icons.settings, color: Colors.black),
                       Text(' Settings'),
                     ],
                   ),
                 ),
-                PopupMenuItem<MenuItem>(
+                const PopupMenuItem<MenuItem>(
                   value: MenuItem.info,
                   child: Row(
-                      children: const <Widget>[
+                      children: <Widget>[
                       Icon(Icons.info, color: Colors.black),
                       Text(' Info'),
                     ],
