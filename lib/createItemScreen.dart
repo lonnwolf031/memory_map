@@ -18,15 +18,13 @@ class _CreateItemState extends State<CreateItemScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
+  var _isLoading = false;
+
   Future<void> saveItem() async {
     var newLocation = Location(lat: widget.location.latitude.toString(),
         lon: widget.location.longitude.toString(),
     title: _titleController.text, description: _descriptionController.text);
     var inRes = await SqliteService.createItem(newLocation);
-  }
-
-  void save() async {
-    await saveItem();
   }
 
   @override
@@ -39,6 +37,10 @@ class _CreateItemState extends State<CreateItemScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Stack (
+            children: [
+            if (_isLoading) const Center(child: CircularProgressIndicator())
+              ]),
             Padding(
               padding: const EdgeInsets.all(15),
               child: TextField(
@@ -68,11 +70,10 @@ class _CreateItemState extends State<CreateItemScreen> {
               padding: const EdgeInsets.all(15),
               child: ElevatedButton(
                     child: const Text('Save'),
-                    onPressed: ()  {
-                      save();
-                      setState(() {
-                        // save
-                      });
+                    onPressed: () async {
+                      setState(() =>  _isLoading = true );
+                      await saveItem();
+                      setState(() =>  _isLoading = false );
                     },
                   ),
             ),

@@ -50,21 +50,10 @@ class _SelectLocationState extends State<SelectLocationScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-        Stack (
-          children: [
-          // add all your children here
-/*
-          if (isLoading)
-          const Opacity(
-          opacity: 0.8,
-          child: ModalBarrier(
-            dismissible: false,
-            color: Colors.black,
-          ),
-        ),*/
-          if (_isLoading) const Center(child: CircularProgressIndicator())
-      ]
-      ),
+          Stack (
+            children: [
+            if (_isLoading) const Center(child: CircularProgressIndicator())
+          ]),
             Padding(
               padding: const EdgeInsets.all(15),
               child: TextField(
@@ -79,9 +68,9 @@ class _SelectLocationState extends State<SelectLocationScreen> {
             ElevatedButton(
               child: const Text('Search'),
               onPressed: () async {
-                setState(() { _isLoading = true; });//show loader
+                setState(() =>  _isLoading = true );//show loader
                 await findLocation(_searchController.text);
-                setState(() { _isLoading = false; });//h
+                setState(() => _isLoading = false );//h
               },
             ),
             ListView.separated(
@@ -91,9 +80,9 @@ class _SelectLocationState extends State<SelectLocationScreen> {
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
                 onTap: () async {
-                  setState(() { _isLoading = true; });//show loader
+                  setState(() => _isLoading = true );//show loader
                   await returnPoint(_suggestions[index]);
-                  setState(() { _isLoading = false; });//hide loader
+                  setState(() => _isLoading = false);//hide loader
                 },
                   leading: const Icon(Icons.location_pin),
                   title: Text(getLocationTitle(_suggestions[index])),
