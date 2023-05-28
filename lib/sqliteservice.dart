@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-
 import 'locationdata.dart';
 
 class SqliteService{
@@ -37,8 +35,7 @@ class SqliteService{
 
   static Future<int> createItem(Location location) async {
     final db = await SqliteService.initializeDb();
-
-    final id = await db.insert(locationTableName, location.toMap(),
+    final id = await db.insert(locationTableName, location.insert(),
         conflictAlgorithm: ConflictAlgorithm.replace);
     return id;
   }
@@ -50,12 +47,10 @@ class SqliteService{
   }
 
   static Future<int> updateLocation(int id, Location item) async{ // returns the number of rows updated
-
     final db = await initializeDb();
-
     int result = await db.update(
         locationTableName,
-        item.toMap(),
+        item.update(),
         where: "id = ?",
         whereArgs: [id]
     );

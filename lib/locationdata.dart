@@ -1,6 +1,5 @@
 class LocationColumn {
   static final List<String> values = [
-    /// Add all fields
     id, lat, lon, title, description
   ];
 
@@ -32,13 +31,22 @@ class Location{
         title = item[LocationColumn.title] ?? '',
         description = item[LocationColumn.description] ?? '';
 
-  Map<String, Object> toMap(){
+  Map<String, Object> update(){
     return {
-      LocationColumn.id:id ?? 0,
+      LocationColumn.id:id ?? -1,
       LocationColumn.lat:lat,
       LocationColumn.lon:lon,
-      LocationColumn.title: title,
-      LocationColumn.description: description,
+      LocationColumn.title:title,
+      LocationColumn.description:description,
+    };
+  }
+
+  Map<String, Object> insert(){
+    return {
+      LocationColumn.lat:lat,
+      LocationColumn.lon:lon,
+      LocationColumn.title:title,
+      LocationColumn.description:description,
     };
   }
 }
