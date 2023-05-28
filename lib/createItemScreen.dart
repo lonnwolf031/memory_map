@@ -23,7 +23,10 @@ class _CreateItemState extends State<CreateItemScreen> {
         lon: widget.location.longitude.toString(),
     title: _titleController.text, description: _descriptionController.text);
     var inRes = await SqliteService.createItem(newLocation);
-    var outRes = await SqliteService.getItems();
+  }
+
+  void save() async {
+    await saveItem();
   }
 
   @override
@@ -65,8 +68,8 @@ class _CreateItemState extends State<CreateItemScreen> {
               padding: const EdgeInsets.all(15),
               child: ElevatedButton(
                     child: const Text('Save'),
-                    onPressed: () {
-                      saveItem();
+                    onPressed: ()  {
+                      save();
                       setState(() {
                         // save
                       });

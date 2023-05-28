@@ -17,6 +17,18 @@ class _SelectLocationState extends State<SelectLocationScreen> {
 
   var _suggestions = <SearchInfo>[];
 
+  var _isLoading = false;
+
+  String getLocationTitle(SearchInfo info) {
+    if(info.address!.street != null) {
+      return info.address!.street!;
+    } else if (info.address!.name != null) {
+      return info.address!.name!;
+    } else {
+      return info.address!.city!;
+    }
+  }
+
   Future<void> findLocation(String query) async {
       List<SearchInfo> suggestions = await addressSuggestion(query);
       _suggestions = suggestions;
@@ -38,6 +50,21 @@ class _SelectLocationState extends State<SelectLocationScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+        Stack (
+          children: [
+          // add all your children here
+/*
+          if (isLoading)
+          const Opacity(
+          opacity: 0.8,
+          child: ModalBarrier(
+            dismissible: false,
+            color: Colors.black,
+          ),
+        ),*/
+          if (_isLoading) const Center(child: CircularProgressIndicator())
+      ]
+      ),
             Padding(
               padding: const EdgeInsets.all(15),
               child: TextField(
@@ -51,10 +78,10 @@ class _SelectLocationState extends State<SelectLocationScreen> {
             ),
             ElevatedButton(
               child: const Text('Search'),
-              onPressed: () {
-                setState(() {
-                  findLocation(_searchController.text);
-                });
+              onPressed: () async {
+                setState(() { _isLoading = true; });//show loader
+                await findLocation(_searchController.text);
+                setState(() { _isLoading = false; });//h
               },
             ),
             ListView.separated(
@@ -64,10 +91,12 @@ class _SelectLocationState extends State<SelectLocationScreen> {
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
                 onTap: () async {
+                  setState(() { _isLoading = true; });//show loader
                   await returnPoint(_suggestions[index]);
+                  setState(() { _isLoading = false; });//hide loader
                 },
                   leading: const Icon(Icons.location_pin),
-                  title: Text(_suggestions[index].address!.street.toString() ?? ''),
+                  title: Text(getLocationTitle(_suggestions[index])),
                   subtitle: Text('${_suggestions[index].address}'),
                 );
               },

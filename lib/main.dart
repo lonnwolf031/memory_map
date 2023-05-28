@@ -38,9 +38,11 @@ class MemoryMapHomePage extends StatefulWidget {
   State<MemoryMapHomePage> createState() => _MemoryMapHomePageState();
 }
 
-class _MemoryMapHomePageState extends State<MemoryMapHomePage> {
+class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObserver{
 
   MenuItem? selectedMenu;
+  late GlobalKey<ScaffoldState> scaffoldKey;
+  Key mapGlobalkey = UniqueKey();
 
   MapController mapController = MapController(
     initMapWithUserPosition: false,
@@ -62,6 +64,53 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> {
   void dispose() {
     mapController.dispose();
     super.dispose();
+  }
+
+  @override
+  Future<void> mapIsReady(bool isReady) async {
+    if (isReady) {
+      await mapIsInitialized();
+    }
+  }
+
+  Future<void> mapIsInitialized() async {
+    await mapController.setZoom(zoomLevel: 12);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    mapController.addObserver(this);
+
+
+    scaffoldKey = GlobalKey<ScaffoldState>();
+    mapController.listenerMapLongTapping.addListener(() async {
+      if (mapController.listenerMapLongTapping.value != null) {
+        print(mapController.listenerMapLongTapping.value);
+        await mapController.addMarker(
+          mapController.listenerMapLongTapping.value!,
+          markerIcon: MarkerIcon(
+            iconWidget: SizedBox.fromSize(
+              size: Size.square(32),
+              child: const Stack(
+                children: [
+                  Icon(
+                    Icons.store,
+                    color: Colors.brown,
+                    size: 32,
+                  ),
+                  Text(
+                    "foo",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          //angle: pi / 3,
+        );
+      }
+    });
   }
 
   void getItems() async {
