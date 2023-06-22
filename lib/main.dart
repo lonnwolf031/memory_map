@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
-import 'package:memory_map/createItemScreen.dart';
+import 'package:memory_map/createitemscreen.dart';
 import 'package:memory_map/searchlocation.dart';
 import 'package:memory_map/utilities.dart';
 import 'sqliteservice.dart';
@@ -43,10 +43,11 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
   MenuItem? selectedMenu;
   late GlobalKey<ScaffoldState> scaffoldKey;
   Key mapGlobalkey = UniqueKey();
+  GeoPoint? userLocation;
 
   MapController mapController = MapController(
     initMapWithUserPosition: false,
-    initPosition: GeoPoint(latitude:  4.9041, longitude: 52.3676),
+    initPosition: GeoPoint(latitude:  52.3676, longitude: 4.9041),
     areaLimit: const BoundingBox.world(),
   );
 
@@ -80,10 +81,11 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
   @override
   void initState() {
     super.initState();
+    // TODO get user location
     mapController.addObserver(this);
 
-
     scaffoldKey = GlobalKey<ScaffoldState>();
+
     mapController.listenerMapLongTapping.addListener(() async {
       if (mapController.listenerMapLongTapping.value != null) {
         print(mapController.listenerMapLongTapping.value);
@@ -141,7 +143,6 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
                 }
                 else if(selectedMenu == MenuItem.settings) {
                   getItems();
-
                 }
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
@@ -250,42 +251,18 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
                   },
                 ),
               ),
+              Padding (
+                padding: const EdgeInsets.all(15),
+                child: ElevatedButton(
+                  child: const Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
             ],
           );
         });
-  }
-
-  Future<void> _showAlertDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog( // <-- SEE HERE
-          title: const Text('Cancel'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: const <Widget>[
-                Text('Are you sure want to cancel?'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('No'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Yes'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   Future<void> _createNewItem(BuildContext context, GeoPoint point) async {
@@ -303,7 +280,6 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
 
     var location = Utilities.castOrNull<SearchInfo>(result);
     if(location != null) {
-      // do something
       await mapController.changeLocation(location.point!);
     }
   }

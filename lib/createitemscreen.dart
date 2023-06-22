@@ -39,8 +39,10 @@ class _CreateItemState extends State<CreateItemScreen> {
           children: <Widget>[
             Stack (
             children: [
-            if (_isLoading) const Center(child: CircularProgressIndicator())
-              ]),
+            if (_isLoading)
+              const Center(child: CircularProgressIndicator())
+              ]
+            ),
             Padding(
               padding: const EdgeInsets.all(15),
               child: TextField(
@@ -69,13 +71,22 @@ class _CreateItemState extends State<CreateItemScreen> {
             Padding(
               padding: const EdgeInsets.all(15),
               child: ElevatedButton(
-                    child: const Text('Save'),
-                    onPressed: () async {
-                      setState(() =>  _isLoading = true );
-                      await saveItem();
-                      setState(() =>  _isLoading = false );
-                    },
-                  ),
+                child: const Text('Save'),
+                onPressed: () async {
+                  setState(() =>  _isLoading = true );
+                  await saveItem();
+                  setState(() =>  _isLoading = false );
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: ElevatedButton(
+                child: const Text('Cancel'),
+                onPressed: (){
+                  Navigator.of(context).pop();
+                },
+              ),
             ),
           ],
         ),
