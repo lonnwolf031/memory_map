@@ -72,10 +72,23 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
     if (isReady) {
       await mapIsInitialized();
     }
+    await loadMarkersFromDb();
   }
 
   Future<void> mapIsInitialized() async {
     await mapController.setZoom(zoomLevel: 12);
+  }
+
+  Future<void> loadMarkersFromDb() async {
+    var items = await SqliteService.getItems();
+    for (var item in items) {
+      var lat = double.tryParse(item.lat);
+      var lon = double.tryParse(item.lon);
+      if (lat != null && lon != null) {
+        mapController.addMarker(GeoPoint(latitude: lat, longitude: lon ));
+        mapController.changeLocation(GeoPoint(latitude: lat, longitude: lon  ));
+      }
+    }
   }
 
   @override

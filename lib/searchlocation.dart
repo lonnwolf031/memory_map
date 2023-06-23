@@ -70,7 +70,7 @@ class _SelectLocationState extends State<SelectLocationScreen> {
               onPressed: () async {
                 setState(() =>  _isLoading = true );//show loader
                 await findLocation(_searchController.text);
-                setState(() => _isLoading = false );//h
+                setState(() => _isLoading = false );
               },
             ),
             ListView.separated(
