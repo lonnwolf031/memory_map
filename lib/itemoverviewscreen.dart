@@ -13,8 +13,8 @@ class ItemOverviewScreen extends StatefulWidget {
 
 class _CreateOverviewState extends State<ItemOverviewScreen> {
 
-  late List<Location> locations;
-  late List<Tag> tags;
+  List<Location>? locations;
+  List<Tag>? tags;
 
   @override
   void initState() {
@@ -24,7 +24,7 @@ class _CreateOverviewState extends State<ItemOverviewScreen> {
 
   Future<void> getData() async {
     locations = await SqliteService.getLocationItems();
-    tags = await SqliteService.getTagItems();
+    //tags = await SqliteService.getTagItems();
   }
 
   @override
@@ -36,13 +36,15 @@ class _CreateOverviewState extends State<ItemOverviewScreen> {
     body: SingleChildScrollView(
       child: ListView.separated(
         padding: const EdgeInsets.all(8),
-        itemCount: locations.length,
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: (locations != null) ? locations!.length : 0,
         itemBuilder: (BuildContext context, int index) {
-          return Container(
+          return SizedBox(
             height: 50,
             //color: Colors.amber[colorCodes[index]],
             child: Center(
-                child: Text('Entry ${locations[index].title}')
+                child: Text('Entry ${(locations != null) ? locations![index].title : ''}')
             ),
           );
         },
