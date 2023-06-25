@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:memory_map/createitemscreen.dart';
+import 'package:memory_map/itemoverviewscreen.dart';
 import 'package:memory_map/searchlocation.dart';
 import 'package:memory_map/utilities.dart';
-import 'sqliteservice.dart';
+import 'data/sqliteservice.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() {
@@ -11,7 +12,7 @@ void main() {
   runApp(const MemoryMapApp());
 }
 
-enum MenuItem { selectLocation, info, settings }
+enum MenuItem { selectLocation, overview, info, settings }
 
 class MemoryMapApp extends StatelessWidget {
   const MemoryMapApp({super.key});
@@ -51,15 +52,6 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
     areaLimit: const BoundingBox.world(),
   );
 
-  menuAction() {
-    switch(selectedMenu) {
-      case MenuItem.settings:
-        break;
-      case MenuItem.info:
-        _showBasicDialog("Information", "${Utilities.appInfo}\n${Utilities.copyrightInfo}");
-        break;
-    }
-  }
 
   @override
   void dispose() {
@@ -80,7 +72,7 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
   }
 
   Future<void> loadMarkersFromDb() async {
-    var items = await SqliteService.getItems();
+    var items = await SqliteService.getLocationItems();
     for (var item in items) {
       var lat = double.tryParse(item.lat);
       var lon = double.tryParse(item.lon);
@@ -129,7 +121,7 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
   }
 
   void getItems() async {
-    var outRes = await SqliteService.getItems();
+    var outRes = await SqliteService.getLocationItems();
     for (var item in outRes) {
       print(item.id);
       print(item.title);
@@ -150,12 +142,18 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
                 setState(() {
                   selectedMenu = item;
                 });
-                menuAction();
                 if(selectedMenu == MenuItem.selectLocation) {
                   _handleLocationSelection(context);
                 }
+                else if (selectedMenu == MenuItem.overview) {
+                  _goToOverview(context);
+                }
                 else if(selectedMenu == MenuItem.settings) {
+                  // temp
                   getItems();
+                }
+                else if (selectedMenu == MenuItem.info) {
+                  _showBasicDialog("Information", "${Utilities.appInfo}\n${Utilities.copyrightInfo}");
                 }
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
@@ -165,6 +163,15 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
                     children: <Widget>[
                       Icon(Icons.search, color: Colors.black),
                       Text(' Find location'),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem<MenuItem>(
+                  value: MenuItem.overview,
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.feed_outlined, color: Colors.black),
+                      Text(' Overview'),
                     ],
                   ),
                 ),
@@ -282,6 +289,13 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
     final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => CreateItemScreen(location: point)),
+    );
+  }
+
+  Future<void> _goToOverview(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ItemOverviewScreen()),
     );
   }
 

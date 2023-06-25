@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
-import 'package:memory_map/locationdata.dart';
-import 'package:memory_map/sqliteservice.dart';
+import 'package:memory_map/data/locationdata.dart';
+import 'package:memory_map/data/sqliteservice.dart';
 
 class CreateItemScreen extends StatefulWidget {
 
@@ -24,7 +24,7 @@ class _CreateItemState extends State<CreateItemScreen> {
     var newLocation = Location(lat: widget.location.latitude.toString(),
         lon: widget.location.longitude.toString(),
     title: _titleController.text, description: _descriptionController.text);
-    var inRes = await SqliteService.createItem(newLocation);
+    var inRes = await SqliteService.createLocationItem(newLocation);
   }
 
   @override
