@@ -79,6 +79,7 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
       if (lat != null && lon != null) {
         mapController.addMarker(GeoPoint(latitude: lat, longitude: lon ));
         mapController.changeLocation(GeoPoint(latitude: lat, longitude: lon  ));
+        mapController.changeLocation(GeoPoint(latitude: lat, longitude: lon  ));
       }
     }
   }
@@ -93,22 +94,17 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
 
     mapController.listenerMapLongTapping.addListener(() async {
       if (mapController.listenerMapLongTapping.value != null) {
-        print(mapController.listenerMapLongTapping.value);
         await mapController.addMarker(
           mapController.listenerMapLongTapping.value!,
           markerIcon: MarkerIcon(
             iconWidget: SizedBox.fromSize(
-              size: Size.square(32),
+              size: const Size.square(32),
               child: const Stack(
                 children: [
                   Icon(
-                    Icons.store,
-                    color: Colors.brown,
+                    Icons.person_pin_circle,
+                    color: Colors.blue,
                     size: 32,
-                  ),
-                  Text(
-                    "foo",
-                    style: TextStyle(fontSize: 18),
                   ),
                 ],
               ),
@@ -191,7 +187,7 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
                       Icon(Icons.info, color: Colors.black),
                       Text(' Info'),
                     ],
-            ),
+                  ),
                 ),
               ],
             ),
@@ -223,7 +219,7 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
             markerOption: MarkerOption(
                 defaultMarker: const MarkerIcon(
                   icon: Icon(
-                    Icons.person_pin_circle,
+                    Icons.place_rounded,
                     color: Colors.blue,
                     size: 56,
                   ),
@@ -246,8 +242,18 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
   }
 
   Future<void> _handleMarkerClicked(GeoPoint point) async {
-    // Declaring and Initializing OverlayState
-    // and OverlayEntry objects
+    // check whether exists
+    var res = await SqliteService.getLocationByGeoPoint(point);
+
+    if(res != null && res.isNotEmpty) {
+
+    }
+    else {
+      _showSaveDialog(point);
+    }
+  }
+
+  Future<void> _showSaveDialog(GeoPoint point) async {
     await showDialog<void>(
         context: context,
         builder: (BuildContext context) {
@@ -259,7 +265,7 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
                 child: Text(point.latitude.toString()),
               ),
 
-              Padding (
+              Padding(
                 padding: const EdgeInsets.all(15),
                 child: ElevatedButton(
                   child: const Text('Save'),
@@ -271,7 +277,7 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
                   },
                 ),
               ),
-              Padding (
+              Padding(
                 padding: const EdgeInsets.all(15),
                 child: ElevatedButton(
                   child: const Text('Cancel'),
@@ -284,6 +290,7 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
           );
         });
   }
+
 
   Future<void> _createNewItem(BuildContext context, GeoPoint point) async {
     final result = await Navigator.push(

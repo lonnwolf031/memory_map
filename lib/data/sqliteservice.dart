@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:memory_map/data/imagedata.dart';
 import 'package:memory_map/data/tagdata.dart';
 import 'package:path/path.dart';
@@ -68,6 +69,18 @@ class SqliteService{
     final id = await db.insert(imageTableName, image.insert(),
         conflictAlgorithm: ConflictAlgorithm.replace);
     return id;
+  }
+
+  static Future<List<Location>> getLocationByGeoPoint(GeoPoint p)  async {
+    final db = await SqliteService.initializeDb();
+    final List<Map<String, dynamic>> maps = await db.query(
+         locationTableName,
+          where: "${LocationColumns.lat} = ? AND ${LocationColumns.lon} = ?",
+          whereArgs: [p.latitude, p.longitude],
+          orderBy: LocationColumns.id,
+          limit: 10,
+      );
+    return List.generate(maps.length, (index) => Location.fromMap(maps[index]));
   }
 
   static Future<List<Location>> getLocationItems() async {
