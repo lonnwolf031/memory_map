@@ -20,7 +20,9 @@ class _SelectLocationState extends State<SelectLocationScreen> {
   var _isLoading = false;
 
   String getLocationTitle(SearchInfo info) {
-    if(info.address!.street != null) {
+    if(info.address == null) {
+      return info.point.toString();
+    } else if(info.address!.street != null) {
       return info.address!.street!;
     } else if (info.address!.name != null) {
       return info.address!.name!;

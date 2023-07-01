@@ -3,6 +3,8 @@ import 'package:memory_map/data/locationdata.dart';
 import 'data/sqliteservice.dart';
 import 'data/tagdata.dart';
 
+enum SortItem {city, country, tag}
+
 class ItemOverviewScreen extends StatefulWidget {
 
   const ItemOverviewScreen({super.key});
@@ -16,6 +18,8 @@ class _CreateOverviewState extends State<ItemOverviewScreen> {
   List<Location>? locations;
   List<Tag>? tags;
 
+  SortItem? selectedMenu;
+
   @override
   void initState() {
     super.initState();
@@ -23,7 +27,10 @@ class _CreateOverviewState extends State<ItemOverviewScreen> {
   }
 
   Future<void> getData() async {
-    locations = await SqliteService.getLocationItems();
+    var newlocations = await SqliteService.getLocationItems();
+    setState(() {
+      locations = newlocations;
+    });
     //tags = await SqliteService.getTagItems();
   }
 
@@ -31,7 +38,58 @@ class _CreateOverviewState extends State<ItemOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-        title: const Text('Create location memory'),
+          title: Text("Overview"),
+          actions: <Widget>[
+            PopupMenuButton<SortItem>(
+              initialValue: selectedMenu,
+              // Callback that sets the selected popup menu item.
+              onSelected: (SortItem item) {
+                setState(() {
+                  selectedMenu = item;
+                });
+                if(selectedMenu == SortItem.country) {
+                  setState(() {
+
+                  });
+                }
+                else if (selectedMenu == SortItem.city) {
+                  setState(() {
+
+                  });
+                }
+                else if(selectedMenu == SortItem.tag) {
+                    setState(() {
+
+                    });
+                }},
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<SortItem>>[
+                const PopupMenuItem<SortItem>(
+                  value: SortItem.city,
+                  child: Row(
+                    children: <Widget>[
+                      Text('City'),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem<SortItem>(
+                  value: SortItem.country,
+                  child: Row(
+                    children: <Widget>[
+                      Text('Country'),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem<SortItem>(
+                  value: SortItem.tag,
+                  child:  Row(
+                    children: <Widget>[
+                      Text('Tag'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
     ),
     body: SingleChildScrollView(
       child: ListView.separated(
