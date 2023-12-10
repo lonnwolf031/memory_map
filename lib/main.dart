@@ -48,7 +48,6 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
   final TextEditingController _searchController = TextEditingController();
 
   MapController mapController = MapController(
-    initMapWithUserPosition: false,
     initPosition: GeoPoint(latitude:  52.3676, longitude: 4.9041),
     areaLimit: const BoundingBox.world(),
   );
@@ -224,11 +223,24 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
         children: <Widget>[
           OSMFlutter(
             controller: mapController,
-            trackMyPosition: true,
             onGeoPointClicked: (p) =>  _handleMarkerClicked(p),
-            initZoom: 15,
-            stepZoom: 1.0,
+            osmOption:  OSMOption(
+              markerOption: MarkerOption(
+                  defaultMarker: const MarkerIcon(
+                    icon: Icon(
+                      Icons.place_rounded,
+                      color: Colors.blue,
+                      size: 56,
+                    ),
+                  )
+            ),
+
+            zoomOption:  const ZoomOption(
+              initZoom: 15,
+              stepZoom: 1.0,
+            ),
             userLocationMarker: UserLocationMaker(
+             // trackMyPosition: true,
               personMarker: const MarkerIcon(
                 icon: Icon(
                   Icons.location_history_rounded,
@@ -243,17 +255,8 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
                 ),
               ),
             ),
-            markerOption: MarkerOption(
-                defaultMarker: const MarkerIcon(
-                  icon: Icon(
-                    Icons.place_rounded,
-                    color: Colors.blue,
-                    size: 56,
-                  ),
-                )
-            ),
           ),
-        ],
+        )],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
