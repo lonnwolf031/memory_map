@@ -4,7 +4,6 @@ import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 class SelectLocationScreen extends StatefulWidget {
 
   const SelectLocationScreen({super.key, required this.controller});
-
   final MapController controller;
 
   @override

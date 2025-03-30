@@ -45,6 +45,7 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
   late GlobalKey<ScaffoldState> scaffoldKey;
   Key mapGlobalkey = UniqueKey();
   GeoPoint? userLocation;
+  var _suggestions = <SearchInfo>[];
   final TextEditingController _searchController = TextEditingController();
 
   MapController mapController = MapController(
@@ -116,6 +117,11 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
     });
   }
 
+  Future<void> findLocation(String query) async {
+    List<SearchInfo> suggestions = await addressSuggestion(query);
+    _suggestions = suggestions;
+  }
+
   void getItems() async {
     var outRes = await SqliteService.getLocationItems();
     for (var item in outRes) {
@@ -140,14 +146,16 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
                 hintText: 'Search...',
                 // Add a clear button to the search bar
                 suffixIcon: IconButton(
-                  icon: Icon(Icons.clear, color: Colors.black,),
-                  onPressed: () => _searchController.clear(),
+                  icon: const Icon(Icons.clear, color: Colors.black,),
+                  onPressed: () async  {
+                      _searchController.clear();
+                    },
                 ),
                 // Add a search icon or button to the search bar
                 prefixIcon: IconButton(
-                  icon: Icon(Icons.search, color: Colors.black,),
-                  onPressed: () {
-                    // Perform the search here
+                  icon: const Icon(Icons.search, color: Colors.black,),
+                  onPressed: () async {
+                    await findLocation(_searchController.text);
                   },
                 ),
                 // border: OutlineInputBorder(
@@ -275,7 +283,7 @@ class _MemoryMapHomePageState extends State<MemoryMapHomePage> with OSMMixinObse
     // check whether exists
     var res = await SqliteService.getLocationByGeoPoint(point);
 
-    if(res != null && res.isNotEmpty) {
+    if(res.isNotEmpty) {
 
     }
     else {
