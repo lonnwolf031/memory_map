@@ -1,0 +1,73 @@
+PODS:
+  - Alamofire (5.8.1)
+  - Flutter (1.0.0)
+  - flutter_osm_plugin (0.0.1):
+    - Alamofire
+    - Flutter
+    - Polyline
+    - Tangram-es
+    - Yams
+  - location (0.0.1):
+    - Flutter
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - permission_handler_apple (9.3.0):
+    - Flutter
+  - Polyline (5.1.0)
+  - sqflite_darwin (0.0.4):
+    - Flutter
+    - FlutterMacOS
+  - Tangram-es (0.17.1)
+  - url_launcher_ios (0.0.1):
+    - Flutter
+  - Yams (5.0.6)
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_osm_plugin (from `.symlinks/plugins/flutter_osm_plugin/ios`)
+  - location (from `.symlinks/plugins/location/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - sqflite_darwin (from `.symlinks/plugins/sqflite_darwin/darwin`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - Polyline
+    - Tangram-es
+    - Yams
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_osm_plugin:
+    :path: ".symlinks/plugins/flutter_osm_plugin/ios"
+  location:
+    :path: ".symlinks/plugins/location/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
+  sqflite_darwin:
+    :path: ".symlinks/plugins/sqflite_darwin/darwin"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
+
+SPEC CHECKSUMS:
+  Alamofire: 3ca42e259043ee0dc5c0cdd76c4bc568b8e42af7
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_osm_plugin: a661df71d2a3d1698ee410dd2272c8536f9e46f4
+  location: d5cf8598915965547c3f36761ae9cc4f4e87d22e
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
+  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
+  Polyline: 2a1f29f87f8d9b7de868940f4f76deb8c678a5b1
+  sqflite_darwin: 5a7236e3b501866c1c9befc6771dfd73ffb8702d
+  Tangram-es: 628b634f7fc09d2217469b9914de00d9de49ff9d
+  url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
+  Yams: e10dae147f517ed57ecae37c5e8681bdf8fcab65
+
+PODFILE CHECKSUM: 90ab075367aab9258c5f2ca5c3ab032f6b569ae4
+
+COCOAPODS: 1.14.3
